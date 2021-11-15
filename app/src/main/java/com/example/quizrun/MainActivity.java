@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         ArrayList<MainModel> categories = new ArrayList<>();
-        categories.add(new MainModel("","Mathematics","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
+        categories.add(new MainModel("","Mathematics","https://cdn-icons-png.flaticon.com/512/3874/3874176.png"));
         categories.add(new MainModel("","Science","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
         categories.add(new MainModel("","History","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
         categories.add(new MainModel("","Language","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
