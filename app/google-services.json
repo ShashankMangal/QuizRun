@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "42548894313",
+    "project_id": "quizrun-6891e",
+    "storage_bucket": "quizrun-6891e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42548894313:android:56a2ecc8eca685541e20f8",
+        "android_client_info": {
+          "package_name": "com.example.quizrun"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42548894313-8blevmjlc52vlm84bl38e5ap1rnqvtg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD98MaT5wsn0QYrJLb8ZQb4iRNyf4oJ3Z8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42548894313-8blevmjlc52vlm84bl38e5ap1rnqvtg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
