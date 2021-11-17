@@ -1,11 +1,20 @@
 package com.example.quizrun;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.quizrun.MainModel.User;
+import com.example.quizrun.databinding.ActivityRegisterBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,43 +26,90 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
-    private Button registerButton;
     private String userId;
+    private String email , pass , name , referCode;
+    private ActivityRegisterBinding binding;
+    private Map<String , Object> userMap;
+    private ProgressDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        userId = auth.getUid();
 
-        registerButton = findViewById(R.id.registerSubmitButton);
+        dialog = new ProgressDialog(this );
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        binding.registerSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Map<String , Object> userMap = new HashMap<>();
-                userId = auth.getCurrentUser().getUid();
-                DocumentReference documentReference = firestore.collection("Users").document(userId).collection("UsersInfo").document("Details");
+                email = binding.registerEmail.getText().toString();
+                pass = binding.registerPassword.getText().toString();
+                name = binding.registerName.getText().toString();
+                referCode = binding.registerReferCode.getText().toString();
 
-//                userMap.put("ownerMail",ownerName);
-//                userMap.put("ownerMail",ownerMail);
-//                userMap.put("ownerPhone",ownerPhone);
-//                userMap.put("pgAddress",OwnerAddress);
-////                userMap.put("PG City",OwnerCity);
-////                userMap.put("PG State",OwnerState);
-//                userMap.put("pgName",OwnerCity);
-//                userMap.put("ownerName",OwnerState);
-//                userMap.put("pgPincode",OwnerPincode);
-//                userMap.put("pgBasePrice",OwnerBasePrice);
+                User user = new User(name , email , referCode);
+                dialog.show();
+                dialog.setMessage("Registration in Progress");
+                auth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if(task.isSuccessful())
+                        {
+                            firestore.collection("Users").document(userId).set(user)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                       if(task.isSuccessful())
+                                       {
+                                           dialog.dismiss();
+                                           startActivity(new Intent(RegisterActivity.this , LoginActivity.class));
+                                           finish();
+                                       }
+                                       else
+                                       {
+                                           dialog.dismiss();
+                                           Toast.makeText(getApplicationContext(), task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                       }
+                                        }
+                                    });
+                            userMap = new HashMap<>();
+                            userId = auth.getCurrentUser().getUid();
+                            Toast.makeText(getApplicationContext(), "Registration Successfully.", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
 
+//                Map<String , Object> userMap = new HashMap<>();
+//                userId = auth.getCurrentUser().getUid();
+//                DocumentReference documentReference = firestore.collection("Users").document(userId).collection("UsersInfo").document("Details");
+//
+//
+//
+//
+//
+//                documentReference.set(userMap);
 
-                documentReference.set(userMap);
+            }
+        });
 
+        binding.registerToLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this , LoginActivity.class));
             }
         });
 

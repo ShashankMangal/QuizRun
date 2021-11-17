@@ -1,7 +1,9 @@
 package com.example.quizrun;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.os.Bundle;
@@ -9,19 +11,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.quizrun.Fragments.HomeFragment;
+import com.example.quizrun.Fragments.LeaderboardsFragment;
+import com.example.quizrun.Fragments.ProfileFragment;
+import com.example.quizrun.Fragments.WalletFragment;
 import com.example.quizrun.MainAdapter.MainAdapter;
 import com.example.quizrun.MainModel.MainModel;
 import com.example.quizrun.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth auth;
-    private FirebaseFirestore firestore;
-    ActivityMainBinding binding;
+
+
+    private ActivityMainBinding binding;
 
 
     @Override
@@ -33,23 +44,55 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content,new HomeFragment());
+        transaction.commit();
 
-        auth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
+        binding.bottomBar.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        ArrayList<MainModel> categories = new ArrayList<>();
-        categories.add(new MainModel("","Mathematics","https://cdn-icons-png.flaticon.com/512/3874/3874176.png"));
-        categories.add(new MainModel("","Science","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
-        categories.add(new MainModel("","History","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
-        categories.add(new MainModel("","Language","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
-        categories.add(new MainModel("","GK","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
-        categories.add(new MainModel("","Current Affairs","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
-        categories.add(new MainModel("","Television","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
-        categories.add(new MainModel("","Sports","https://en.opensuse.org/images/f/fc/Icon-bug.png"));
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        MainAdapter adapter = new MainAdapter(this , categories);
-        binding.categoryList.setLayoutManager(new GridLayoutManager(this , 2));
-        binding.categoryList.setAdapter(adapter);
+                switch(item.getItemId()){
+                    case R.id.home:
+                        transaction.replace(R.id.content,new HomeFragment());
+                        transaction.commit();
+
+                        break;
+
+                    case R.id.wallet:
+                        transaction.replace(R.id.content,new WalletFragment());
+                        transaction.commit();
+
+                        break;
+
+                    case R.id.rank:
+                        transaction.replace(R.id.content,new LeaderboardsFragment());
+                        transaction.commit();
+
+                        break;
+
+                    case R.id.profile:
+                        transaction.replace(R.id.content,new ProfileFragment());
+                        transaction.commit();
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+
+
+
+
+
+
 
 
 

@@ -60,7 +60,7 @@
 
 
             <EditText
-                android:id="@+id/registerEmail"
+                android:id="@+id/loginEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -74,7 +74,7 @@
                 android:padding="15dp" />
 
             <EditText
-                android:id="@+id/registerPassword"
+                android:id="@+id/loginPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -104,7 +104,7 @@
 
 
             <Button
-                android:id="@+id/registerToLoginButton"
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -116,7 +116,7 @@
                 android:text="Login" />
 
             <Button
-                android:id="@+id/registerSubmitButton"
+                android:id="@+id/loginToRegisterButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/submit_btn"
