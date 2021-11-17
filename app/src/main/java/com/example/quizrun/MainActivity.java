@@ -3,6 +3,7 @@ package com.example.quizrun;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -53,35 +54,42 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                Fragment fragment = null;
 
                 switch(item.getItemId()){
                     case R.id.home:
-                        transaction.replace(R.id.content,new HomeFragment());
-                        transaction.commit();
+                        fragment = new HomeFragment();
+//                        transaction.replace(R.id.content,new HomeFragment());
+//                        transaction.commit();
 
                         break;
 
                     case R.id.wallet:
-                        transaction.replace(R.id.content,new WalletFragment());
-                        transaction.commit();
+                        fragment = new WalletFragment();
+//                        transaction.replace(R.id.content,new WalletFragment());
+//                        transaction.commit();
 
                         break;
 
                     case R.id.rank:
-                        transaction.replace(R.id.content,new LeaderboardsFragment());
-                        transaction.commit();
+                        fragment = new LeaderboardsFragment();
+//                        transaction.replace(R.id.content,new LeaderboardsFragment());
+//                        transaction.commit();
 
                         break;
 
                     case R.id.profile:
-                        transaction.replace(R.id.content,new ProfileFragment());
-                        transaction.commit();
+                        fragment = new ProfileFragment();
+//                        transaction.replace(R.id.content,new ProfileFragment());
+//                        transaction.commit();
 
                         break;
 
                     default:
                         break;
                 }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.content , fragment).commit();
 
                 return true;
             }
