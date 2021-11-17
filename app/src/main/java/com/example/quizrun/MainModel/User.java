@@ -3,12 +3,14 @@ package com.example.quizrun.MainModel;
 public class User {
 
     private String name , email , referCode;
+    private long coins;
 
 
-    public User(String nam, String email, String referCode) {
+    public User(String nam, String email, String referCode, long coins) {
         this.name = nam;
         this.email = email;
         this.referCode = referCode;
+        this.coins = coins;
     }
 
     public User() {
@@ -36,5 +38,13 @@ public class User {
 
     public void setReferCode(String referCode) {
         this.referCode = referCode;
+    }
+
+    public long getCoins() {
+        return coins;
+    }
+
+    public void setCoins(long coins) {
+        this.coins = coins;
     }
 }

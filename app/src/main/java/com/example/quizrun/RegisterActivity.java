@@ -29,7 +29,6 @@ public class RegisterActivity extends AppCompatActivity {
     private String userId;
     private String email , pass , name , referCode;
     private ActivityRegisterBinding binding;
-    private Map<String , Object> userMap;
     private ProgressDialog dialog;
 
 
@@ -41,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-        userId = auth.getUid();
+
 
         dialog = new ProgressDialog(this );
 
@@ -54,7 +53,9 @@ public class RegisterActivity extends AppCompatActivity {
                 name = binding.registerName.getText().toString();
                 referCode = binding.registerReferCode.getText().toString();
 
-                User user = new User(name , email , referCode);
+
+
+                User user = new User(name , email , referCode,200);
                 dialog.show();
                 dialog.setMessage("Registration in Progress");
                 auth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -62,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if(task.isSuccessful())
-                        {
+                        {    userId = auth.getUid();
                             firestore.collection("Users").document(userId).set(user)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -80,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                                        }
                                         }
                                     });
-                            userMap = new HashMap<>();
+
                             userId = auth.getCurrentUser().getUid();
                             Toast.makeText(getApplicationContext(), "Registration Successfully.", Toast.LENGTH_SHORT).show();
                         }
@@ -93,15 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-//                Map<String , Object> userMap = new HashMap<>();
-//                userId = auth.getCurrentUser().getUid();
-//                DocumentReference documentReference = firestore.collection("Users").document(userId).collection("UsersInfo").document("Details");
-//
-//
-//
-//
-//
-//                documentReference.set(userMap);
+
 
             }
         });
