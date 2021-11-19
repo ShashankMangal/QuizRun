@@ -1,5 +1,6 @@
 package com.example.quizrun.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,10 +10,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.example.quizrun.MainAdapter.MainAdapter;
 import com.example.quizrun.MainModel.MainModel;
 import com.example.quizrun.R;
+import com.example.quizrun.SpinnerActivity;
 import com.example.quizrun.databinding.FragmentHomeBinding;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -68,7 +71,16 @@ public class HomeFragment extends Fragment {
         binding.categoryList.setLayoutManager(new GridLayoutManager(getContext() , 2));
         binding.categoryList.setAdapter(adapter);
 
-        // Inflate the layout for this fragment
+        binding.spinWheel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getContext(), SpinnerActivity.class));
+
+            }
+        });
+
+
         return binding.getRoot();
     }
 }
