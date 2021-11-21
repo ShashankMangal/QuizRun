@@ -19,6 +19,10 @@ import com.example.quizrun.Fragments.WalletFragment;
 import com.example.quizrun.MainAdapter.MainAdapter;
 import com.example.quizrun.MainModel.MainModel;
 import com.example.quizrun.databinding.ActivityMainBinding;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ActivityMainBinding binding;
+    Fragment fragment;
 
 
     @Override
@@ -41,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        binding.adView.loadAd(adRequest);
 
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white));
@@ -54,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                Fragment fragment = null;
+                fragment = null;
 
                 switch(item.getItemId()){
                     case R.id.home:
@@ -116,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.wallet){
-            Toast.makeText(this, "Wallet is Clicked !", Toast.LENGTH_SHORT).show();
+            fragment = new WalletFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content , fragment).commit();
+
         }
         return super.onOptionsItemSelected(item);
     }

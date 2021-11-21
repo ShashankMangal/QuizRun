@@ -1,5 +1,6 @@
 package com.example.quizrun;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,6 +13,10 @@ import android.widget.Toast;
 
 import com.example.quizrun.MainModel.Question;
 import com.example.quizrun.databinding.ActivityQuizBinding;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,12 +34,65 @@ public class QuizActivity extends AppCompatActivity {
     CountDownTimer timer;
     FirebaseFirestore database;
     int correctAnswer = 0;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityQuizBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-5127713321341585/5105398192");
+
+
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener()
+        {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                if(mInterstitialAd.isLoaded())
+                    mInterstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                mInterstitialAd.loadAd(adRequest);
+            }
+        });
+        binding.adView2.loadAd(adRequest);
+
+        binding.quitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(QuizActivity.this, "Reward not Added.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(QuizActivity.this , MainActivity.class));
+            }
+        });
+
+        binding.adView2.setAdListener(new AdListener()
+        {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                binding.adView2.loadAd(adRequest);
+            }
+        });
 
         questions = new ArrayList<>();
         database = FirebaseFirestore.getInstance();
@@ -96,6 +154,19 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                reset();
+                if(index < questions.size()-1) {
+                    Log.d("Question Number : ",String.valueOf(index+1));
+                    ++index;
+
+                    nextQuestion();
+                }else{
+                    Intent intent = new Intent(QuizActivity.this , ResultActivity.class);
+                    intent.putExtra("correct",correctAnswer);
+                    intent.putExtra("total",questions.size());
+                    startActivity(intent);
+                    Toast.makeText(QuizActivity.this, "Quiz Finished.", Toast.LENGTH_SHORT).show();
+                }
 
             }
         };

@@ -1,6 +1,7 @@
 package com.example.quizrun;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.quizrun.SpinWheel.LuckyWheelView;
 import com.example.quizrun.SpinWheel.model.LuckyItem;
 import com.example.quizrun.databinding.ActivitySpinnerBinding;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
@@ -23,11 +28,20 @@ import java.util.Random;
 public class SpinnerActivity extends AppCompatActivity {
 
     ActivitySpinnerBinding binding;
+    private InterstitialAd mInterstitialAd;
+    AdRequest adRequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySpinnerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        adRequest = new AdRequest.Builder().build();
+
+        binding.adViewSpinner1.loadAd(adRequest);
+        binding.adViewSpinner2.loadAd(adRequest);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-5127713321341585/6145666055");
 
         List<LuckyItem> data = new ArrayList<>();
 
@@ -142,6 +156,10 @@ public class SpinnerActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(SpinnerActivity.this, " Coins added.", Toast.LENGTH_SHORT).show();
+
+                        startActivity(new Intent(SpinnerActivity.this , MainActivity.class));
+
+
             }
         });
 
